@@ -1,12 +1,31 @@
 public class Player {
 
     private String _name;
-    private int _health;
     private String _job;
-    private int _muted;
-    private Player _vote;
+    private boolean _muted;
+    private int _vote_id;
     private int _victim_id;
     private Connector _connector;
+
+    public boolean isAlive() {
+        return _alive;
+    }
+
+    public void setAlive(boolean _alive) {
+        this._alive = _alive;
+    }
+
+    private boolean _alive;
+
+    public boolean isImmortal() {
+        return _immortal;
+    }
+
+    public void setImmortal(boolean _immortal) {
+        this._immortal = _immortal;
+    }
+
+    private boolean _immortal;
 
     public int getId() {
         return _id;
@@ -16,7 +35,6 @@ public class Player {
     private int _id;
 
     public Player (Connector connector) {
-        _health = 1;
         _job = null;
         _connector = connector;
         _id = connector.getId();
@@ -39,14 +57,6 @@ public class Player {
         this._name = _name;
     }
 
-    public int get_health() {
-        return _health;
-    }
-
-    public void set_health(int _health) {
-        this._health = _health;
-    }
-
     public String get_job() {
         return _job;
     }
@@ -55,20 +65,20 @@ public class Player {
         this._job = _job;
     }
 
-    public int get_muted() {
+    public boolean getMuted() {
         return _muted;
     }
 
-    public void set_muted(int _muted) {
+    public void setMuted(boolean _muted) {
         this._muted = _muted;
     }
 
-    public Player get_vote() {
-        return _vote;
+    public int getVoteId() {
+        return _vote_id;
     }
 
-    public void set_vote(Player _vote) {
-        this._vote = _vote;
+    public void set_vote_id(int _vote_id) {
+        this._vote_id = _vote_id;
     }
 
     public int getVictimId() {
@@ -83,21 +93,9 @@ public class Player {
         this.set_name(this.get_connector().requestName());
     }
 
-    public void kill () {
-        this._health -= 1;
-    }
-
-    public void heal () {
-        this._health += 1;
-    }
-
     public String investigate () {
         //notify all players
         return this._job;
-    }
-
-    public void mute () {
-        this._muted += 1;
     }
 
     public void assignJob (String job) {
@@ -105,27 +103,6 @@ public class Player {
         this._connector.announceJob(job);
     }
 
-    public void actJobOnVote () {
-        this.actJob(this._vote);
-    }
-
-
-    public void actJob (Player victim) {
-        String job = this._job;
-        if (job.equals("KILLER")) {
-            victim.kill();
-        }
-        else if (job.equals("DETECTIVE")) {
-            victim.investigate();
-        }
-        else if (job.equals("WHORE")) {
-            victim.mute();
-        }
-        else if (job.equals("DOCTOR")) {
-            victim.heal();
-        }
-        return;
-    }
 
     public void updateVote() {
         return;

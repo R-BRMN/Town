@@ -15,12 +15,11 @@ public class Main {
 
         Game g1 = new Game(c1);
 
-        g1.assignJobs(new String[]{"KILLER","KILLER","DOCTOR","DETECTIVE"});
-        g1.getController().renameAll(); //Let each player set their own game
+        g1.getController().assignJobs(new String[]{"KILLER","KILLER","DOCTOR","DETECTIVE"});
+        //g1.getController().renameAll(); //Let each player set their own game
 
         g1.playStep();
-        g1.playStep();
-        
+
 
     }
 }
