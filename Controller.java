@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class Controller {
     /**
@@ -10,10 +11,7 @@ public class Controller {
     private LinkedList <Player> _doctors;
     private LinkedList <Player> _detectives;
     private LinkedList <Player> _whores;
-
-    public Player [] get_players() {
-        return _players;
-    }
+    private Queue <String> _announcements;
 
     public Controller (Player [] player_list) {
         _players = player_list;
@@ -21,7 +19,13 @@ public class Controller {
         _doctors = new LinkedList<>();
         _detectives = new LinkedList<>();
         _whores = new LinkedList<>();
+        _announcements = new LinkedList<>();
 
+    }
+
+
+    public Player [] get_players() {
+        return _players;
     }
 
     public void set_players(Player [] players) {
@@ -86,44 +90,72 @@ public class Controller {
      * Acts out each player's professional choice.
      */
     public void actJobs() {
-        System.out.println(this._killers.size());
-        System.out.println(this._killers);
         //Doctor goes first:
-        for (int count = 0; count < this._doctors.size(); count++) {
-            this.setImmortal(this._players[this._doctors.get(count).getVictimId()]);
-        }
-        //Whores do their thing:
-        for (int count = 0; count < this._whores.size(); count++) {
-            this.mute(this._players[this._whores.get(count).getVictimId()]);
-        }
-        //Detectives do their thing:
-        for (int count = 0; count < this._detectives.size(); count++) {
-            this.investigate(this._players[this._detectives.get(count).getVictimId()]);
+        if (this._doctors.size()>0) {
+            this.actDoctors();
         }
         //Killers do their thing:
+        if (this._killers.size() > 0) {
+            actKillers();
+        }
+        //Whores do their thing:
+        if (this._whores.size()>0) {
+            this.actWhores();
+        }
+        //Detectives do their thing:
+        if (this._detectives.size() > 0) {
+            actDetectives();
+        }
+    }
+
+
+    /**
+     * Kills the chosen player if the the decision is unanimous.
+     */
+    public void actKillers() {
         int murdered_id = this._killers.get(0).getVictimId();
-        for (int count = 1; count < this._killers.size(); count++) {
+        for (int count = 0; count < this._killers.size(); count++) {
             //Find the agreed upon murdered player.
             if (murdered_id != this._killers.get(count).getVictimId()) {
                 return;
             }
         }
         this.kill(this._players[murdered_id]);
+        this.addAnouncement("Player ID: "+murdered_id+" has been killed!");
+    }
+
+    public void actDetectives() {
+        for (int count = 0; count < this._detectives.size(); count++) {
+            this.investigate(this._players[this._detectives.get(count).getVictimId()]);
+        }
+    }
+
+    public void actWhores() {
+        for (int count = 0; count < this._whores.size(); count++) {
+            this.mute(this._players[this._whores.get(count).getVictimId()]);
+        }
+    }
+
+    public void actDoctors() {
+        for (int count = 0; count < this._doctors.size(); count++) {
+            this.setImmortal(this._players[this._doctors.get(count).getVictimId()]);
+        }
     }
 
     public void investigate(Player player) {
-        System.out.println("investigated: "+player.getId());
-        return;
+        if (player.get_job() == "KILLER") {
+            this.addAnouncement("Detectives found: A KILLER!");
+            return;
+        }
+        this.addAnouncement("Detectives investigated an innocent person");
     }
 
     public void mute(Player player) { //can whores mute immortals?
-        System.out.println("muted: "+player.getId());
+        this.addAnouncement("Player ID: "+player.getId()+" has been muted");
         player.setMuted(true);
-        return;
     }
 
     public void setImmortal(Player player) {
-        System.out.println("cured: "+player.getId());
         player.setImmortal(true);
     }
 
@@ -175,5 +207,9 @@ public class Controller {
             state+="\n";
         }
         return state;
+    }
+
+    public void addAnouncement(String announcement) {
+        this._announcements.add(announcement);
     }
 }

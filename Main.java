@@ -14,11 +14,11 @@ public class Main {
         Controller c1 = new Controller(new Player []{p1, p2, p3, p4, p5, p6, p7, p8});
 
         Game g1 = new Game(c1);
-
+        g1.getController().resetPlayers();
         g1.getController().assignJobs(new String[]{"KILLER","KILLER","DOCTOR","DETECTIVE"});
         //g1.getController().renameAll(); //Let each player set their own game
-
         g1.playStep();
+        System.out.println(g1.getController().stringifyState());
 
 
     }

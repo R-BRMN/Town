@@ -20,29 +20,6 @@ public class Game {
     }
 
 
-//    /**
-//     * Assigns each Player a job and notifies them of it, assigns "CITIZEN" to jobless players.
-//     * Known job strings are: KILLER, DOCTOR, DETECTIVE, WHORE, SHAMAN.
-//     * @param jobs : String [] containing names of jobs.
-//     */
-//    public void assignJobs(String [] jobs) {
-//        String assigned = "";
-//        for (int j=0; j<jobs.length; j++) { //For each job in the jobs list
-//            int r  = -1;
-//            while (assigned.contains((String.valueOf(r))) || r == -1) { //if player at r has no job, or if first try.
-//                r = (int)(Math.random() * this._controller.get_players().length); //Choose a random player
-//            }
-//            assigned += String.valueOf(r); //Make note of assigning a job to player at r.
-//            this._controller.get_players()[r].assignJob(jobs[j]);
-//        }
-//        for (int i=0; i<this._controller.get_players().length; i++) { //All who have no job are citizens.
-//            if (this._controller.get_players()[i].get_job() == null) {
-//                this._controller.get_players()[i].assignJob("CITIZEN");
-//            }
-//        }
-//    }
-
-
     /**
      * Plays a full round, according to these steps:
      * Step 0 : It is night time, People do their job.
@@ -57,7 +34,6 @@ public class Game {
                 //Each person does their stuff
                 this._controller.updateVictims();
                 this._controller.actJobs();
-                System.out.println(this._controller.stringifyState());
                 break;
             case 1:
                 //Town is notified about what happened during the night.
@@ -76,21 +52,7 @@ public class Game {
         step ++;
     }
 
-
-    public int getStep() {
-        return step;
-    }
-
-    public void setStep(int step) {
-        this.step = step;
-    }
-
     public Controller getController() {
         return _controller;
     }
-
-    public void set_controller(Controller _controller) {
-        this._controller = _controller;
-    }
-
 }
