@@ -7,6 +7,12 @@ public class Player {
     private Player _vote;
     private int _victim_id;
     private Connector _connector;
+
+    public int getId() {
+        return _id;
+    }
+
+
     private int _id;
 
     public Player (Connector connector) {
@@ -65,7 +71,7 @@ public class Player {
         this._vote = _vote;
     }
 
-    public int get_victim_id() {
+    public int getVictimId() {
         return _victim_id;
     }
 
@@ -94,9 +100,9 @@ public class Player {
         this._muted += 1;
     }
 
-    public String assignJob (String job) {
+    public void assignJob (String job) {
         this._job = job;
-        return job;
+        this._connector.announceJob(job);
     }
 
     public void actJobOnVote () {
@@ -127,5 +133,9 @@ public class Player {
 
     public void updateVictim() {
         this._victim_id = this._connector.requestVictim();
+    }
+
+    public void announce(String announcement) {
+        this._connector.announce(announcement);
     }
 }

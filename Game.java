@@ -6,55 +6,23 @@ import java.util.LinkedList;
  */
 public class Game {
 
-    public Player[] get_players() {
-        return _players;
-    }
-
-    public void set_players(Player[] _players) {
-        this._players = _players;
-    }
-
-    public int getStep() {
-        return step;
-    }
-
-    public void setStep(int step) {
-        this.step = step;
-    }
-
-    public Controller get_controller() {
-        return _controller;
-    }
-
-    public void set_controller(Controller _controller) {
-        this._controller = _controller;
-    }
-
-    private Player[] _players;
     private int step;
     private Controller _controller;
+
 
     /**
      * Instance of Game.
      * @param controller : The game's controller, used to micro-manage players.
      */
     public Game(Controller controller) {
-        this._players = controller.get_players();
         this.step = 0;
         this._controller = controller;
     }
 
 
-    public void actJobs (Player [] players) {
-        for (int i=0; i<players.length; i++) {
-            players [i].actJobOnVote();
-        }
-        return;
-    }
-
     /**
      * Assigns each Player a job and notifies them of it, assigns "CITIZEN" to jobless players.
-     * Known job strings are: KILLER, DOCTOR, WHORE, SHAMAN.
+     * Known job strings are: KILLER, DOCTOR, DETECTIVE, WHORE, SHAMAN.
      * @param jobs : String [] containing names of jobs.
      */
     public void assignJobs(String [] jobs) {
@@ -62,18 +30,18 @@ public class Game {
         for (int j=0; j<jobs.length; j++) { //For each job in the jobs list
             int r  = -1;
             while (assigned.contains((String.valueOf(r))) || r == -1) { //if player at r has no job, or if first try.
-                r = (int)(Math.random() * this._players.length); //Choose a random player
+                r = (int)(Math.random() * this._controller.get_players().length); //Choose a random player
             }
-            this._players[r].assignJob(jobs[j]);
             assigned += String.valueOf(r); //Make note of assigning a job to player at r.
+            this._controller.get_players()[r].assignJob(jobs[j]);
         }
-        for (int i=0; i<this._players.length; i++) { //All who have no job are citizens.
-            if (this._players[i].get_job() == null) {
-                this._players[i].assignJob("CITIZEN");
+        for (int i=0; i<this._controller.get_players().length; i++) { //All who have no job are citizens.
+            if (this._controller.get_players()[i].get_job() == null) {
+                this._controller.get_players()[i].assignJob("CITIZEN");
             }
         }
-        return;
     }
+
 
     /**
      * Plays a full round, according to these steps:
@@ -88,12 +56,14 @@ public class Game {
                 //Game starts at night, with the killers choosing randomly.
                 //Each person does their stuff
                 this._controller.updateVictims();
-                this.actJobs(this._players);
+                this._controller.actJobs();
                 System.out.println("nice");
                 break;
             case 1:
                 //Town is notified about what happened during the night.
                 //Town is voting about who to kill.
+                this._controller.announceAllPlayers("Sup");
+                System.out.println(this._controller.stringifyState());
                 break;
             case 2:
                 //Game won or continue.
@@ -105,4 +75,29 @@ public class Game {
         }
         step ++;
     }
+
+    public void actJobs (Player [] players) {
+        for (int i=0; i<players.length; i++) {
+            players [i].actJobOnVote();
+        }
+        return;
+    }
+
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
+        this.step = step;
+    }
+
+    public Controller getController() {
+        return _controller;
+    }
+
+    public void set_controller(Controller _controller) {
+        this._controller = _controller;
+    }
+
 }

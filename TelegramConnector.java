@@ -1,2 +1,2 @@
-public class TelegramConnector extends Connector {
+public class TelegramConnector {
 }
