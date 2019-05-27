@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 
-public class TestConnector extends Connector {
+public class TestConnector implements Connector {
 
     Scanner s = new Scanner(System.in);
 
@@ -19,7 +19,6 @@ public class TestConnector extends Connector {
         _id = id;
     }
 
-    @Override
     public String request_name() {
         System.out.println("Please type new name for player.id = "+this.get_id());
         String new_name = s.next();

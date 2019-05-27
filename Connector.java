@@ -1,18 +1,6 @@
-public class Connector {
+public interface Connector {
 
-    public Player getVote (Player name) {
-        return null;
-    }
+    public String request_name();
+    public int request_victim();
 
-    public Player pullVictim () {
-        return null;
-    }
-
-    public String request_name() {
-        return null;
-    }
-
-    public int request_victim() {
-        return 0;
-    }
 }
