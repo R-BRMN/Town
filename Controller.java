@@ -87,7 +87,7 @@ public class Controller {
     }
 
     /**
-     * Acts out each player's professional choice.
+     * Acts out each profession.
      */
     public void actJobs() {
         //Doctor goes first:
@@ -211,5 +211,11 @@ public class Controller {
 
     public void addAnouncement(String announcement) {
         this._announcements.add(announcement);
+    }
+
+    public void announceAllAnnouncements() {
+        while (this._announcements.size()>0) {
+            this.announceAllPlayers(_announcements.remove());
+        }
     }
 }

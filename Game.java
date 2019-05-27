@@ -34,6 +34,8 @@ public class Game {
                 //Each person does their stuff
                 this._controller.updateVictims();
                 this._controller.actJobs();
+                this._controller.announceAllAnnouncements();
+                //clean up dead
                 break;
             case 1:
                 //Town is notified about what happened during the night.
