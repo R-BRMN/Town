@@ -5,7 +5,17 @@ public class Player {
     private String _job;
     private int _muted;
     private Player _vote;
-    private int _victim;
+    private int _victim_id;
+    private Connector _connector;
+    private int _id;
+
+    public Player (Connector connector) {
+        _health = 1;
+        _job = null;
+        _connector = connector;
+        _id = connector.getId();
+
+    }
 
     public Connector get_connector() {
         return _connector;
@@ -14,10 +24,6 @@ public class Player {
     public void set_connector(Connector _connector) {
         this._connector = _connector;
     }
-
-    private Connector _connector;
-    private int _id;
-
 
     public String get_name() {
         return _name;
@@ -59,23 +65,16 @@ public class Player {
         this._vote = _vote;
     }
 
-    public int get_victim() {
-        return _victim;
+    public int get_victim_id() {
+        return _victim_id;
     }
 
-    public void set_victim(int _victim) {
-        this._victim = _victim;
+    public void set_victim_id(int _victim_id) {
+        this._victim_id = _victim_id;
     }
 
     public void request_name() {
-        this.set_name(this.get_connector().request_name());
-    }
-
-
-    public Player (int id) {
-        _health = 1;
-        _job = null;
-        _id = id;
+        this.set_name(this.get_connector().requestName());
     }
 
     public void kill () {
@@ -127,7 +126,6 @@ public class Player {
     }
 
     public void updateVictim() {
-        this.set_victim(this.get_connector().request_victim());
-        return;
+        this._victim_id = this._connector.requestVictim();
     }
 }

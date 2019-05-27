@@ -2,18 +2,17 @@ public class Main {
     public static void main (String [] args) {
         System.out.println("Welcome to Town testing!");
 
-        Controller c1 = new Controller();
-        c1.addPlayer(new Player(1));
-        c1.addPlayer(new Player(2));
-        c1.addPlayer(new Player(3));
-        c1.addPlayer(new Player(4));
-        c1.addPlayer(new Player(5));
-        c1.addPlayer(new Player(6));
-        c1.addPlayer(new Player(7));
+        Player p1 = new Player (new TestConnector(0));
+        Player p2 = new Player (new TestConnector(1));
+        Player p3 = new Player (new TestConnector(2));
+        Player p4 = new Player (new TestConnector(3));
+        Player p5 = new Player (new TestConnector(4));
+        Player p6 = new Player (new TestConnector(5));
+        Player p7 = new Player (new TestConnector(6));
+        Player p8 = new Player (new TestConnector(7));
 
-        for (int i=0; i<c1.get_players().size(); i++) {
-            c1.get_players().get(i).set_connector(new TestConnector(i));
-        }
+        Controller c1 = new Controller(new Player []{p1, p2, p3, p4, p5, p6, p7, p8});
+
 
         //Let each player set their own game
         //c1.renameAll();

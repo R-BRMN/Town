@@ -1,6 +1,11 @@
 public interface Connector {
 
-    public String request_name();
-    public int request_victim();
+    public String requestName();
+    public int requestVictim();
+    public int requestVote();
+    public void announce(String announcement);
+    public void announceJob(String job);
+    public void provideCurrentState();
+    public int getId();
 
 }

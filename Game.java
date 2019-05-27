@@ -36,10 +36,10 @@ public class Game {
 
     /**
      * Instance of Game.
-     * @param controller : The game's interface, for running a game.
+     * @param controller : The game's controller, used to micro-manage players.
      */
     public Game(Controller controller) {
-        this._players = null;
+        this._players = controller.get_players();
         this.step = 0;
         this._controller = controller;
     }
@@ -52,17 +52,22 @@ public class Game {
         return;
     }
 
+    /**
+     * Assigns each Player a job and notifies them of it, assigns "CITIZEN" to jobless players.
+     * Known job strings are: KILLER, DOCTOR, WHORE, SHAMAN.
+     * @param jobs : String [] containing names of jobs.
+     */
     public void assignJobs(String [] jobs) {
         String assigned = "";
-        for (int j=0; j<jobs.length; j++) {
+        for (int j=0; j<jobs.length; j++) { //For each job in the jobs list
             int r  = -1;
-            while (assigned.contains((String.valueOf(r))) || r == -1) {
-                r = (int)(Math.random() * this._players.length);
+            while (assigned.contains((String.valueOf(r))) || r == -1) { //if player at r has no job, or if first try.
+                r = (int)(Math.random() * this._players.length); //Choose a random player
             }
             this._players[r].assignJob(jobs[j]);
-            assigned += String.valueOf(r);
+            assigned += String.valueOf(r); //Make note of assigning a job to player at r.
         }
-        for (int i=0; i<this._players.length; i++) {
+        for (int i=0; i<this._players.length; i++) { //All who have no job are citizens.
             if (this._players[i].get_job() == null) {
                 this._players[i].assignJob("CITIZEN");
             }

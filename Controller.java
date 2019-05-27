@@ -2,51 +2,44 @@ import java.util.LinkedList;
 
 public class Controller {
     /**
-     *Instances of this class will handle different interfaces for the same Game instance.
+     *Instances of this class are responsible for acting out the Game's instructions, facing Players.
      */
 
-    private LinkedList<Player> _players;
+    private Player [] _players;
 
-    public LinkedList<Player> get_players() {
+    public Player [] get_players() {
         return _players;
     }
 
-    public Controller () {
-        _players = new LinkedList<Player>();
+    public Controller (Player [] player_list) {
+        _players = player_list;
     }
 
-    public void set_players(LinkedList<Player> _players) {
-        this._players = _players;
+    public void set_players(Player [] players) {
+        this._players = players;
     }
-
-
-//    public void addPlayer(String name) {
-//        this.get_players().add(new Player(name));
-//    }
-
-    public void addPlayer(Player player) {
-        this.get_players().add(player);
-    }
-
 
     public void updateVotes() {
-        for (int player_index = 0; player_index < this.get_players().size(); player_index++) {
-            this.get_players().get(player_index).updateVote();
+        /**
+         * Updates vote of each player.
+         */
+        for (int player_index = 0; player_index < this._players.length; player_index++) {
+            this._players[player_index].updateVote();
         }
     }
 
     public void updateVictims() {
         /**
-         *
+         * Updates victim for each player.
          */
-        for (int player_index = 0; player_index < this.get_players().size(); player_index++) {
-            this.get_players().get(player_index).updateVictim();
+        for (int player_index = 0; player_index < this._players.length; player_index++) {
+            this._players[player_index].updateVictim();
         }
     }
 
     public void renameAll() {
-        for (int player_index = 0; player_index < this.get_players().size(); player_index++) {
-            this.get_players().get(player_index).request_name();
+        for (int player_index = 0; player_index < this._players.length; player_index++) {
+            this._players[player_index].request_name();
         }
     }
 }
