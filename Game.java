@@ -35,6 +35,7 @@ public class Game {
                 this._controller.updateVictims();
                 this._controller.actJobs();
                 this._controller.announceAllAnnouncements();
+                this._controller.resetMortality();
                 //clean up dead
                 break;
             case 1:

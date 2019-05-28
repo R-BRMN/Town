@@ -7,16 +7,6 @@ public class Player {
     private int _victim_id;
     private Connector _connector;
 
-    public boolean isAlive() {
-        return _alive;
-    }
-
-    public void setAlive(boolean _alive) {
-        this._alive = _alive;
-    }
-
-    private boolean _alive;
-
     public boolean isImmortal() {
         return _immortal;
     }
@@ -108,7 +98,7 @@ public class Player {
         return;
     }
 
-    public void updateVictim() {
+    public void requestVictim() {
         this._victim_id = this._connector.requestVictim();
     }
 

@@ -7,20 +7,17 @@ public class Controller {
      */
 
     private Player [] _players;
+    private LinkedList <Player> _alive;
     private LinkedList <Player> _killers;
     private LinkedList <Player> _doctors;
     private LinkedList <Player> _detectives;
     private LinkedList <Player> _whores;
     private Queue <String> _announcements;
+    private boolean announce_interrogation_publicly = true;
+    private boolean zombie_detectives = true;
 
     public Controller (Player [] player_list) {
         _players = player_list;
-        _killers = new LinkedList<>();
-        _doctors = new LinkedList<>();
-        _detectives = new LinkedList<>();
-        _whores = new LinkedList<>();
-        _announcements = new LinkedList<>();
-
     }
 
 
@@ -67,20 +64,35 @@ public class Controller {
     }
 
     public void resetPlayers() {
+        this._killers = new LinkedList<>();
+        this._doctors = new LinkedList<>();
+        this._detectives = new LinkedList<>();
+        this._whores = new LinkedList<>();
+        this._announcements = new LinkedList<>();
         for (int player_id = 0; player_id < this._players.length; player_id++) { //for each player
+            this._alive.add(this._players[player_id]);
             this._players[player_id].setImmortal(false);
             this._players[player_id].setMuted(false);
-            this._players[player_id].setAlive(true);
             this._players[player_id].set_job(null);
             this._players[player_id].set_victim_id(-1);
             this._players[player_id].set_vote_id(-1);
         }
     }
 
+
+    /**
+     * After the night concludes, the doctor's effect dissolves.
+     */
+    public void resetMortality() {
+        for (int player_id = 0; player_id < this._alive.size(); player_id++) { //for each player alive
+            this._players[this._alive.get(player_id).getId()].setImmortal(false);
+        }
+    }
+
+    /**
+     * Updates vote of each player.
+     */
     public void updateVotes() {
-        /**
-         * Updates vote of each player.
-         */
         for (int player_index = 0; player_index < this._players.length; player_index++) {
             this._players[player_index].updateVote();
         }
@@ -105,6 +117,22 @@ public class Controller {
         //Detectives do their thing:
         if (this._detectives.size() > 0) {
             actDetectives();
+        }
+        /**
+         * Since more bamboozles means more fun, the game host will declare false findings as if the detective is still
+         * alive.
+         * This should be toggled in the 'advanced options'.
+         * Zombie detectives have a 50/50 chance between yelling killer or innocent.
+         */
+        else if (zombie_detectives && announce_interrogation_publicly) {
+            if ((int)(Math.random()*2) == 1) {
+                this.addAnouncement("Detectives found: A KILLER!");
+            }
+            else {
+                this.addAnouncement("Detectives found: Innocent!");
+
+            }
+
         }
     }
 
@@ -161,17 +189,42 @@ public class Controller {
 
     public void kill (Player player) {
         if (!player.isImmortal()) { //If wasn't worked on by a doctor.
-            player.setAlive(false); //Kill player
-            System.out.println("killed: "+player.getId());
+            removePlayer(player); //Kill player
+        }
+    }
+
+    private void removePlayer(Player player) {
+        int player_id = player.getId();
+        String player_job = player.get_job();
+        removeIdFromLinkedList(player_id, this._alive);
+        if (player_job == "KILLER") {
+            removeIdFromLinkedList(player_id, this._killers);
+        }
+        else if (player_job == "DOCTOR") {
+            removeIdFromLinkedList(player_id, this._doctors);
+        }
+        else if (player_job == "WHORE") {
+            removeIdFromLinkedList(player_id, this._whores);
+        }
+        else if (player_job == "DETECTIVE") {
+            removeIdFromLinkedList(player_id, this._detectives);
+        }
+    }
+
+    private void removeIdFromLinkedList(int id, LinkedList<Player> linked_list) {
+        for (int i=0; i<linked_list.size(); i++) {
+            if (linked_list.get(i).getId() == id) {
+                linked_list.remove(i);
+            }
         }
     }
 
     public void updateVictims() {
         /**
-         * Updates victim for each player.
+         * Updates victim for all living players.
          */
-        for (int player_index = 0; player_index < this._players.length; player_index++) {
-            this._players[player_index].updateVictim();
+        for (int player_id = 0; player_id < this._alive.size(); player_id++) { //for each player alive
+            this._alive.get(player_id).requestVictim();
         }
     }
 
@@ -190,9 +243,15 @@ public class Controller {
      * Send the same string to every player.
      * @param announcement : String the message to be sent.
      */
-    public void announceAllPlayers(String announcement) {
+    private void announceAllPlayers(String announcement) {
         for (int player_id = 0; player_id < this._players.length; player_id++) { //for each player
             this._players[player_id].announce(announcement);
+        }
+    }
+
+    public void announceAllAlivePlayers(String announcement) {
+        for (int player_id = 0; player_id < this._alive.size(); player_id++) { //for each player alive
+            this._alive.get(player_id).announce(announcement);
         }
     }
 
@@ -200,7 +259,6 @@ public class Controller {
         String state = "";
         for (int player_id = 0; player_id < this._players.length; player_id++) { //for each player
             state += this._players[player_id].get_name() + " ID: "+this._players[player_id].getId();
-            state += "\n\t ALIVE: "+this._players[player_id].isAlive();
             state += "\n\t VICTIM_ID: "+this._players[player_id].getVictimId();
             state += "\n\t VOTE_ID: "+this._players[player_id].getVoteId();
 
