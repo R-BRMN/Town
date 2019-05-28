@@ -25,10 +25,6 @@ public class Controller {
         return _players;
     }
 
-    public void set_players(Player [] players) {
-        this._players = players;
-    }
-
     /**
      * Assigns each Player a job and notifies them of it, assigns "CITIZEN" to jobless players.
      * Known job strings are: KILLER, DOCTOR, DETECTIVE, WHORE, SHAMAN.
@@ -63,12 +59,16 @@ public class Controller {
         }
     }
 
+    /**
+     * Resets the same players for another game.
+     */
     public void resetPlayers() {
         this._killers = new LinkedList<>();
         this._doctors = new LinkedList<>();
         this._detectives = new LinkedList<>();
         this._whores = new LinkedList<>();
         this._announcements = new LinkedList<>();
+        this._alive = new LinkedList<>();
         for (int player_id = 0; player_id < this._players.length; player_id++) { //for each player
             this._alive.add(this._players[player_id]);
             this._players[player_id].setImmortal(false);
@@ -171,7 +171,7 @@ public class Controller {
     }
 
     public void investigate(Player player) {
-        if (player.get_job() == "KILLER") {
+        if (player.get_job().equals("KILLER")) {
             this.addAnouncement("Detectives found: A KILLER!");
             return;
         }
@@ -243,7 +243,7 @@ public class Controller {
      * Send the same string to every player.
      * @param announcement : String the message to be sent.
      */
-    private void announceAllPlayers(String announcement) {
+    public void announceAllPlayers(String announcement) {
         for (int player_id = 0; player_id < this._players.length; player_id++) { //for each player
             this._players[player_id].announce(announcement);
         }
@@ -261,6 +261,18 @@ public class Controller {
             state += this._players[player_id].get_name() + " ID: "+this._players[player_id].getId();
             state += "\n\t VICTIM_ID: "+this._players[player_id].getVictimId();
             state += "\n\t VOTE_ID: "+this._players[player_id].getVoteId();
+
+            state+="\n";
+        }
+        return state;
+    }
+
+    public String stringifyAliveState() {
+        String state = "";
+        for (int player_id = 0; player_id < this._alive.size(); player_id++) { //for each player
+            state += this._alive.get(player_id).get_name() + " ID: "+this._alive.get(player_id).getId();
+            state += "\n\t VICTIM_ID: "+this._alive.get(player_id).getVictimId();
+            state += "\n\t VOTE_ID: "+this._alive.get(player_id).getVoteId();
 
             state+="\n";
         }

@@ -16,9 +16,12 @@ public class Main {
         Game g1 = new Game(c1);
         g1.getController().resetPlayers();
         g1.getController().assignJobs(new String[]{"KILLER","KILLER","DOCTOR","DETECTIVE"});
+
         //g1.getController().renameAll(); //Let each player set their own game
         g1.playStep();
-        System.out.println(g1.getController().stringifyState());
+        System.out.println("done step");
+        System.out.println(g1.getController().stringifyAliveState());
+
 
 
     }

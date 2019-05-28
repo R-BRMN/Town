@@ -41,8 +41,8 @@ public class Game {
             case 1:
                 //Town is notified about what happened during the night.
                 //Town is voting about who to kill.
-                this._controller.announceAllPlayers("Sup");
-                System.out.println(this._controller.stringifyState());
+                //First vote, everyone chooses who they want to kill. They get 5 minutes or they lose their vote.
+                //If there is a clear winner, 
                 break;
             case 2:
                 //Game won or continue.
