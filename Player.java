@@ -94,8 +94,8 @@ public class Player {
     }
 
 
-    public void updateVote() {
-        return;
+    public void requestVote() {
+        this._vote_id = this._connector.requestVote();
     }
 
     public void requestVictim() {

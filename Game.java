@@ -32,24 +32,30 @@ public class Game {
             case 0:
                 //Game starts at night, with the killers choosing randomly.
                 //Each person does their stuff
+                System.out.println("Step 0");
                 this._controller.updateVictims();
                 this._controller.actJobs();
-                this._controller.announceAllAnnouncements();
                 this._controller.resetMortality();
                 //clean up dead
                 break;
             case 1:
-                //Town is notified about what happened during the night.
+                System.out.println("Step 1");
+                this._controller.announceAllAnnouncements(); //Town is notified about what happened during the night.
+                this._controller.kill(this._controller.haveVote());
+
                 //Town is voting about who to kill.
                 //First vote, everyone chooses who they want to kill. They get 5 minutes or they lose their vote.
                 //If there is a clear winner, 
                 break;
             case 2:
                 //Game won or continue.
-                step = 0;
+                if (!this._controller.isGameOver()) {
+                    step = -1; //because step gets ++ at end of function
+                }
                 break;
             case 3:
                 //game won
+                this._controller.announceScore();
                 return;
         }
         step ++;

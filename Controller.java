@@ -1,5 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Controller {
     /**
@@ -86,15 +88,6 @@ public class Controller {
     public void resetMortality() {
         for (int player_id = 0; player_id < this._alive.size(); player_id++) { //for each player alive
             this._players[this._alive.get(player_id).getId()].setImmortal(false);
-        }
-    }
-
-    /**
-     * Updates vote of each player.
-     */
-    public void updateVotes() {
-        for (int player_index = 0; player_index < this._players.length; player_index++) {
-            this._players[player_index].updateVote();
         }
     }
 
@@ -189,25 +182,25 @@ public class Controller {
 
     public void kill (Player player) {
         if (!player.isImmortal()) { //If wasn't worked on by a doctor.
-            removePlayer(player); //Kill player
+            this.removePlayer(player); //Kill player
         }
     }
 
     private void removePlayer(Player player) {
         int player_id = player.getId();
         String player_job = player.get_job();
-        removeIdFromLinkedList(player_id, this._alive);
+        this.removeIdFromLinkedList(player_id, this._alive);
         if (player_job == "KILLER") {
-            removeIdFromLinkedList(player_id, this._killers);
+            this.removeIdFromLinkedList(player_id, this._killers);
         }
         else if (player_job == "DOCTOR") {
-            removeIdFromLinkedList(player_id, this._doctors);
+            this.removeIdFromLinkedList(player_id, this._doctors);
         }
         else if (player_job == "WHORE") {
-            removeIdFromLinkedList(player_id, this._whores);
+            this.removeIdFromLinkedList(player_id, this._whores);
         }
         else if (player_job == "DETECTIVE") {
-            removeIdFromLinkedList(player_id, this._detectives);
+            this.removeIdFromLinkedList(player_id, this._detectives);
         }
     }
 
@@ -287,5 +280,50 @@ public class Controller {
         while (this._announcements.size()>0) {
             this.announceAllPlayers(_announcements.remove());
         }
+    }
+
+    /**
+     * Vote logic.
+     *
+     * Each player can choose any of the other players, and see the live score updating accordingly.
+     * Each player chooses a person
+     * person with most votes is killed
+     *
+     * @return
+     */
+    public Player haveVote() {
+        int [] vote_array = new int [this._players.length];
+        for (int i=0; i<vote_array.length; i++) {
+            vote_array[i] = 0;
+        }
+        for (int player_id = 0; player_id < this._alive.size(); player_id++) { //for each player
+            this._players[player_id].requestVote();
+            vote_array[this._players[player_id].getVoteId()] += 1;//votearray shows how many times each has been voted.
+        }
+        int max = 0;
+        int count = 0;
+        for (int i=0; i<vote_array.length; i++) {
+            if (vote_array[max] < vote_array[i]) {
+                max = i;
+                count = 1;
+            }
+            else if (vote_array[max] == vote_array[i]) {
+                count += 1;
+            }
+        }
+        if (count>1) {
+            return haveVote();
+        }
+        else {
+            return this._players[max];
+        }
+    }
+
+    public boolean isGameOver() {
+        return false;
+    }
+
+    public void announceScore() {
+        
     }
 }
