@@ -17,6 +17,7 @@ public class Game {
     public Game(Controller controller) {
         this.step = 0;
         this._controller = controller;
+        System.out.println("cool");
     }
 
 
